@@ -1,9 +1,9 @@
 import os
-
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense, Activation
+
+# from keras.models import Sequential
+# from keras.layers import Dense, Activation
 
 ROOT = os.path.join(os.path.dirname(__file__), '../')
 file_name = os.path.join(ROOT, 'data', 'no_filter.csv')
