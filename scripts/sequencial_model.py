@@ -1,51 +1,70 @@
 import os
 import numpy as np
 import pandas as pd
+import random as rn
 
 import data_manager as dm
+import utils
 
-from keras.preprocessing.sequence import pad_sequences
+from sklearn.model_selection import train_test_split
+from keras import backend as K
+from keras.utils import np_utils
 from keras.models import Sequential
 from keras.layers import RNN, SimpleRNN, Dense, Activation, Dropout
+
+import tensorflow as tf
+
+os.environ['PYTHONHASHSEED'] = '0'
+np.random.seed(42)
+rn.seed(12345)
+seed = 0
+
+session_conf = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
+tf.set_random_seed(1234)
+
+sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
+K.set_session(sess)
 
 FLAGS = None
 ROOT = os.path.join(os.path.dirname(__file__), '../')
 
-file_name = os.path.join(ROOT, 'data', 'no_filter.csv')
+
+csv_file = os.path.join(ROOT, 'data', 'no_filter.csv')
 pickle_file = os.path.join(ROOT, 'cache', 'telemetry.npy')
 
 
 def main():
 
-    # import the data
-    # data = np.genfromtxt(fname=file_name,
-    #                      delimiter=",",
-    #                      skip_header=1,
-    #                      usecols=range(1, 24),
-    #                      filling_values=-120)
-    #
-    # # create features and labels
-    # X = data[:, 2:24]  # each feature is the signal intensity of a given beacon at a given time step
-    # y = data[:, 0]
-    #
-    # n_samples, n_features = X.shape
-    #
-    # X = X.reshape(n_samples, 7, 3)
-    # X = X.transpose(0, 2, 1)
+    if True:
+        extractor = dm.CsvExtractor(csv_file)
+        X = extractor.get_sequential_features
+        y = extractor.get_labels
 
-    extractor = dm.FeatureLabelExtractor(pickle_file)
-    X = extractor.get_sequential_features
-    y = extractor.get_labels
+    if False:
+        extractor = dm.PickleExtractor(pickle_file)
+        X = extractor.get_sequential_features
+        y = extractor.get_labels
 
-    # pad the telemetry to 4 timesteps, fill with -120 empty data
-    X = pad_dataframe(X, 4, -120)
+        # pad the telemetry to 4 timesteps, fill with -120 empty values
+        X = utils.pad_dataframe(X, 4, -120)
+
+    y = np_utils.to_categorical(y)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
+
+    print(X_train.shape)
+    print(X_test.shape)
+    print(y_train.shape)
+    print(y_test)
 
     n_samples, timesteps, m_features = X.shape
+    batch_size = 32
+    epochs = 30
 
     print('\nBuilding Model...')
     model = Sequential()
     model.add(SimpleRNN(8, return_sequences=True, input_shape=(timesteps, m_features)))
-    model.add(Dropout(0.9))
+    # model.add(Dropout(0.9))
     model.add(SimpleRNN(8))
     model.add(Dense(8))
     model.add(Activation('softmax'))
@@ -57,19 +76,18 @@ def main():
                   metrics=['accuracy'])
     print(model.summary())
 
+    print('\nTraining Model...')
+    model.fit(x=X_train, y=y_train,
+              batch_size=batch_size,
+              epochs=epochs,
+              validation_split=0.1,
+              verbose=1)
 
-def pad_dataframe(dataframe, maxlen, value):
+    score, acc = model.evaluate(X_test, y_test,
+                                batch_size=batch_size)
+    print('Test score:', score)
+    print('Test accuracy:', acc)
 
-    padded = []
-    for col in dataframe.columns.values:
-        padded.append(pad_sequences(sequences=dataframe[col],
-                                    maxlen=maxlen,
-                                    padding='pre',
-                                    truncating='pre',
-                                    value=value))
-
-    padded = np.asarray(padded).transpose(1, 2, 0)
-    return padded
 
 if __name__ == '__main__':
     main()
