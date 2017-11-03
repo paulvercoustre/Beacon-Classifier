@@ -26,10 +26,10 @@ def main():
         # get and pickle raw data
         get_telemetry(conn)
 
-        extractor = PickleExtractor(pickle_file)
-        X = extractor.get_features
-        X_seq = extractor.get_sequential_features
-        y = extractor.get_labels
+        # extractor = PickleExtractor(pickle_file)
+        # X = extractor.get_features
+        # X_seq = extractor.get_sequential_features
+        # y = extractor.get_labels
 
         # for col in X_seq.columns.values:
         #     print(sum(pd.isnull(X_seq[col])))
@@ -55,12 +55,13 @@ def get_telemetry(conn):
     query = """
     SELECT created_at as date, data as telemetry, model, os, osv, real_pump
     FROM total_telemetry_data
+    WHERE created_at::DATE >= '2017-07-04'
     """
 
     curs.execute(query)
     data = list(curs.fetchall())
 
-    np.save(os.path.join(ROOT, 'cache', 'telemetry.npy'), data)
+    np.save(os.path.join(ROOT, 'cache', 'telemetry_new.npy'), data)
 
     curs.close()
 
