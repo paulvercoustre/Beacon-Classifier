@@ -160,7 +160,7 @@ class PickleExtractor:
     def get_labels(self):
 
         # labels start at 0
-        self._label = np.asarray(list(map(lambda x: x[:][5].astype(int) - 1, self._raw_data)))
+        self._label = np.asarray(list(map(lambda x: x[:][5], self._raw_data))).astype(int) - 1
         return self._label
 
     @property
