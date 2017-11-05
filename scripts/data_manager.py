@@ -66,6 +66,7 @@ def get_telemetry(conn):
     curs.close()
 
 
+# todo add option to return in sequential or flat mode
 class CsvExtractor:
     """
     Parameters:
@@ -113,6 +114,8 @@ class CsvExtractor:
         return self._sequential_features
 
 
+# todo keep 8594C654-6565-4DBC-9FA6-BEC41B929609 and 1192EF5B-6CA3-4ACA-B632-C00BC1CC703C
+# todo add option to return in sequential or flat mode
 class PickleExtractor:
 
     """
