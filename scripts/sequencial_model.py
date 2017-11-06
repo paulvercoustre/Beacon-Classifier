@@ -50,7 +50,7 @@ def main():
         y = extractor.get_labels
 
         # pad the telemetry to 4 timesteps, fill with -120 empty values
-        X = utils.pad_dataframe(X, 6, -130)
+        X = utils.pad_dataframe(X, 6, -121)
 
     # Transform labels to One-Hot encoded vectors
     y = np_utils.to_categorical(y)

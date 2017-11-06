@@ -1,0 +1,36 @@
+Paper structure
+
+- Overview of project objectives, constraints, metrics
+
+- Beacon technology, bluetooth signal
+
+- Where I picked up the project:
+    - signal processing analysis
+    - results - This is the benchmark I have to beat
+
+- Data exploration:
+    - plots of label repartition, features,
+    - dimensionality reduction: t-sne, PCA
+
+- Base algorithm
+    - Softmax Classifier on flattened data
+
+- Model iterations:
+    - Softmax Classifier with polynomial features
+    - Random Forest, Gradient boosting
+    - SVC
+    - Neural Net on flattened data
+
+- Shift paradigm
+    We kill information by flattening the features,
+    similar to flattening an image in Vision. Model is 3D
+
+    To use recurrent models (temporal CNN, RNNs), we need more data:
+    - Data augmentation
+
+- Temporal models:
+    - RNNs (SimpleRNN, GRU, LSTM)
+    - 1D convNet
+
+- Model Tuning:
+    - FP vs FN

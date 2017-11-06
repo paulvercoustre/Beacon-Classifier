@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Beacon-Classifier.iml" filepath="$PROJECT_DIR$/.idea/Beacon-Classifier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../scorer/.idea/scorer.iml" filepath="$PROJECT_DIR$/../scorer/.idea/scorer.iml" />
     </modules>
   </component>
 </project>
