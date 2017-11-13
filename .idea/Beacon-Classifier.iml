@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="socio-demo" />
     <orderEntry type="module" module-name="weather-service" />
+    <orderEntry type="module" module-name="scorer" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />

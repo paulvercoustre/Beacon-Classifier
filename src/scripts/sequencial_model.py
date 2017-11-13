@@ -1,15 +1,17 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import time
 import os
 import random as rn
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 import tensorflow as tf
 from keras import backend as K
-from keras import optimizers
-from keras import regularizers
+from keras import optimizers, regularizers
 from keras.layers import LSTM, Dense, Activation
 from keras.models import Sequential
 from keras.utils import np_utils
+from keras.callbacks import TensorBoard
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -28,10 +30,6 @@ K.set_session(sess)
 
 FLAGS = None
 ROOT = os.path.join(os.path.dirname(__file__), '../', '../')
-
-print(os.path.dirname(__file__))
-print(ROOT)
-
 
 csv_file = os.path.join(ROOT, 'data', 'no_filter.csv')
 pickle_file = os.path.join(ROOT, 'cache', 'telemetry_new.npy')
@@ -56,7 +54,7 @@ def main():
     y = np_utils.to_categorical(y)
 
     # split in train and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=seed)
 
     n_samples, timesteps, m_features = X_train.shape
 
@@ -67,9 +65,6 @@ def main():
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train).reshape(-1, timesteps, m_features)
     X_test = scaler.transform(X_test).reshape(-1, timesteps, m_features)
-
-    print(X_train.shape)
-    print(X_test.shape)
 
     print('\nDataset shapes:')
     print('* %s Training & Validation Samples' % X_train.shape[0])
@@ -91,8 +86,8 @@ def main():
 
     # choose the best optimiser
     adam = optimizers.Adam(lr=0.0005)
-    sgd = optimizers.sgd(lr=0.0005, momentum=0.01)
-    rmsprop = optimizers.rmsprop(lr=0.0005)
+    # sgd = optimizers.sgd(lr=0.0005, momentum=0.01)
+    # rmsprop = optimizers.rmsprop(lr=0.0005)
 
     print('\nCompiling Model...')
     model.compile(optimizer=adam,
@@ -100,25 +95,41 @@ def main():
                   metrics=['accuracy'])
     print(model.summary())
 
+    # create callback for TensorBoard
+    tensorboard = TensorBoard(log_dir='./graph',
+                              histogram_freq=1,
+                              write_graph=True,
+                              write_images=True)
+
     print('\nTraining Model...')
     history = model.fit(x=X_train, y=y_train,
                         batch_size=batch_size,
                         epochs=epochs,
                         validation_split=0.2,
-                        verbose=1)
+                        verbose=1,
+                        callbacks=[tensorboard])
 
     score, acc = model.evaluate(X_test, y_test,
                                 batch_size=batch_size)
     print('Test score:', score)
     print('Test accuracy:', acc)
 
-    plt.plot(history.history['loss'], label='Training')
-    plt.plot(history.history['val_loss'], label='Validation')
-    plt.ylabel("Loss")
-    plt.xlabel("Epoch")
-    plt.legend()
-    plt.title("Learning Curve")
-    #plt.show()
+    if False:
+        plt.plot(history.history['loss'], label='Training')
+        plt.plot(history.history['val_loss'], label='Validation')
+        plt.ylabel('Cross-Entropy Loss')
+        plt.xlabel('Epoch')
+        plt.legend()
+        plt.title('Loss Curve')
+        plt.show()
+
+        plt.plot(history.history['acc'], label='Training')
+        plt.plot(history.history['val_acc'], label='Validation')
+        plt.ylabel('Accuracy')
+        plt.xlabel('Epoch')
+        plt.legend()
+        plt.title('Accuracy Curve')
+        plt.show()
 
 
 if __name__ == '__main__':
