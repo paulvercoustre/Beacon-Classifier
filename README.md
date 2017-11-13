@@ -1,9 +1,9 @@
 # Beacon-Classifier
 
 Project todos:
-* Understand difference between telemetry and telemetry_new
-* Select good features / uuid-major-minor
-* Check the class balance
+* Understand difference between telemetry and telemetry_new. Done
+* Select good features / uuid-major-minor. Done
+* Check the class balance. Done
 
 DL models
 * Normalise/standardise data

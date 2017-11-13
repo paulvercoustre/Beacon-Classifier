@@ -10,7 +10,7 @@ Paper structure
 
 - Data exploration:
     - plots of label repartition, features,
-    - dimensionality reduction: t-sne, PCA
+    - dimensionality reduction: T-SNE, PCA
 
 - Base algorithm
     - Softmax Classifier on flattened data

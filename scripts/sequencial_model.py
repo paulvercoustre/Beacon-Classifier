@@ -50,7 +50,7 @@ def main():
         y = extractor.get_labels
 
         # pad the telemetry to 4 timesteps, fill with -120 empty values
-        X = utils.pad_dataframe(X, 6, -121)
+        X = utils.pad_dataframe(X, 3, -120)
 
     # Transform labels to One-Hot encoded vectors
     y = np_utils.to_categorical(y)
@@ -85,15 +85,6 @@ def main():
                    # dropout=0.1,
                    # recurrent_dropout=0.0,
                    kernel_regularizer=regularizers.l2(0.01)))
-    # model.add(LSTM(64,
-    #                return_sequences=True,
-    #                # dropout=0.1,
-    #                # recurrent_dropout=0.1,
-    #                kernel_regularizer=regularizers.l2(0.01)))
-    # model.add(LSTM(64,
-    #                dropout=0.0,
-    #                recurrent_dropout=0.0,
-    #                kernel_regularizer=regularizers.l2(0.01)))
     model.add(Dense(8))
     model.add(Activation('softmax'))
     print('Model Built')
@@ -127,7 +118,7 @@ def main():
     plt.xlabel("Epoch")
     plt.legend()
     plt.title("Learning Curve")
-    plt.show()
+    #plt.show()
 
 
 if __name__ == '__main__':

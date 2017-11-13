@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import psycopg2
 
+import utils
+
 FLAGS = None
 ROOT = os.path.join(os.path.dirname(__file__), '../')
 
@@ -25,14 +27,6 @@ def main():
 
         # get and pickle raw data
         get_telemetry(conn)
-
-        # extractor = PickleExtractor(pickle_file)
-        # X = extractor.get_features
-        # X_seq = extractor.get_sequential_features
-        # y = extractor.get_labels
-
-        # for col in X_seq.columns.values:
-        #     print(sum(pd.isnull(X_seq[col])))
 
     finally:
         conn.close()
@@ -157,7 +151,8 @@ class PickleExtractor:
                            'F74B56F7-5F12-413B-BF5E-DF09CC7E5C33_3_2': [],
                            'F74B56F7-5F12-413B-BF5E-DF09CC7E5C33_3_3': []}
         self._sequential_features = []
-        self._features = []
+        self._flat_features = []
+        self._extra_features = []
         self._label = []
 
     @property
@@ -168,18 +163,18 @@ class PickleExtractor:
         return self._label
 
     @property
-    def get_flat_features(self):
+    def get_extra_features(self):
 
         dates = np.asarray(list(map(lambda x: x[:][0], self._raw_data)))
         model = np.asarray(list(map(lambda x: x[:][2], self._raw_data)))
         o_s = np.asarray(list(map(lambda x: x[:][3], self._raw_data)))
         osv = np.asarray(list(map(lambda x: x[:][4], self._raw_data)))
 
-        self._features = pd.DataFrame(data={'dates': dates,
+        self._extra_features = pd.DataFrame(data={'dates': dates,
                                             'model': model,
                                             'os': o_s,
                                             'os_version': osv})
-        return self._features
+        return self._extra_features
 
     @property
     def get_sequential_features(self):
@@ -196,7 +191,7 @@ class PickleExtractor:
                 key = self.get_uuid_major_minor(line, beacon)
                 detected_beacons.append(key)
 
-            # for each possible beacon append  beacon data if detected
+            # for each possible beacon append beacon data if detected
             # otherwise append empty list
             for beacon in self._telemetry.keys():
 
