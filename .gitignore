@@ -4,6 +4,8 @@ config/*
 # Python version
 .python-version
 
+.idea/*
+
 # Created by https://www.gitignore.io/api/python,jupyternotebook
 
 ### JupyterNotebook ###
