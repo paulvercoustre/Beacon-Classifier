@@ -6,7 +6,7 @@ import psycopg2
 import pandas as pd
 
 FLAGS = None
-ROOT = os.path.join(os.path.dirname(__file__), '../')
+ROOT = os.path.join(os.path.dirname(__file__), '../', '../')
 
 config_file = os.path.join(ROOT, 'config/config.json')
 pickle_file = os.path.join(ROOT, 'cache', 'telemetry.npy')

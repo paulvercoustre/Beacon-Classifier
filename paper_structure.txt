@@ -34,3 +34,6 @@ Paper structure
 
 - Model Tuning:
     - FP vs FN
+
+- Reference list
+Wattenberg, et al., "How to Use t-SNE Effectively", Distill, 2016. http://doi.org/10.23915/distill.00002

@@ -32,7 +32,7 @@ FLAGS = None
 ROOT = os.path.join(os.path.dirname(__file__), '../', '../')
 
 csv_file = os.path.join(ROOT, 'data', 'no_filter.csv')
-pickle_file = os.path.join(ROOT, 'cache', 'telemetry_new.npy')
+pickle_file = os.path.join(ROOT, 'cache', 'telemetry.npy')
 
 
 def main():
